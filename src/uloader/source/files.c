@@ -11,6 +11,7 @@
 #include <fcntl.h>
 #include "sys/dir.h"
 #include <sys/statvfs.h>
+#include <dirent.h>
 #include "unistd.h"
 #include <ogc/conf.h>
 
@@ -270,7 +271,7 @@ int current_device=0;
 
 void read_list_file(unsigned char *dirname, int flag)
 {
-DIR_ITER *fd;
+DIR *fd;struct dirent* fd_dirent;
 
 static char namefile[256*4]; // reserva espacio suficiente para utf-8
 
@@ -319,7 +320,7 @@ if(!dirname)
 		}
 	}
 
-	fd = diropen(swap);
+	fd = opendir(swap);
 
 	if(fd != NULL) 
 		{
@@ -329,7 +330,8 @@ if(!dirname)
 			files[nfiles].is_directory=0;
 			files[nfiles].is_selected=0;
 
-			if(dirnext(fd, namefile, &filestat)!=0) break;
+			if((fd_dirent=readdir(fd))!=NULL && stat(strcpy(namefile,fd_dirent->d_name),&filestat)!=0) break;
+
 
 			if(namefile[0]=='.' && namefile[1]==0) continue;
 		   
@@ -360,7 +362,7 @@ if(!dirname)
 			nfiles++;
 			}
 	
-	dirclose(fd);	
+	closedir(fd);
 	}
 	
   if(!nfiles)

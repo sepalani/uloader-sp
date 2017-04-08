@@ -24,6 +24,7 @@
 #include "gfx.h"
 #include <sys/dir.h>
 #include <sys/stat.h>
+#include <dirent.h>
 
 #include "lz77.h"
 
@@ -66,12 +67,12 @@ while(*s)
 
 s32 FAT_DeleteDir(const char *dirpath)
 {
-	DIR_ITER *dir;
+	DIR *dir;struct dirent* dir_dirent;
 
 	s32 ret;
 
 	/* Open directory */
-	dir = diropen(dirpath);
+	dir = opendir(dirpath);
 	if (!dir)
 		return -1;
 
@@ -81,7 +82,7 @@ s32 FAT_DeleteDir(const char *dirpath)
 		struct stat filestat;
 
 		/* Read entry */
-		if (dirnext(dir, filename, &filestat))
+		if ((dir_dirent=readdir(dir)) && stat(strcpy(filename,dir_dirent->d_name),&filestat))
 			break;
 
 		/* Non valid entry */
@@ -108,7 +109,7 @@ s32 FAT_DeleteDir(const char *dirpath)
 	}
 
 	/* Close directory */
-	dirclose(dir);
+	closedir(dir);
 
 	return 0;
 }
@@ -406,11 +407,11 @@ if(!header) return;
 
 int test_FAT_game(char * directory)
 {
-DIR_ITER * dir=NULL;
+DIR * dir=NULL;
 
-	dir= diropen(directory);
+	dir= opendir(directory);
 	
-	if(dir) {dirclose(dir);return 1;}
+	if(dir) {closedir(dir);return 1;}
 
 return 0;
 }
@@ -700,7 +701,7 @@ return NULL;
 
 static s32 scan_for_shared2(const char *dirpath)
 {
-	DIR_ITER *dir;
+	DIR *dir;struct dirent* dir_dirent;
 
 	//s32 ret;
 
@@ -719,7 +720,7 @@ static s32 scan_for_shared2(const char *dirpath)
 	int m;
 
 	/* Open directory */
-	dir = diropen(dirpath);
+	dir = opendir(dirpath);
 	if (!dir)
 		return -1;
 
@@ -729,7 +730,7 @@ static s32 scan_for_shared2(const char *dirpath)
 		struct stat filestat;
 
 		/* Read entry */
-		if (dirnext(dir, filename, &filestat))
+		if ((dir_dirent=readdir(dir)) && stat(strcpy(filename,dir_dirent->d_name),&filestat))
 			break;
 
 		/* Non valid entry */
@@ -824,7 +825,7 @@ static s32 scan_for_shared2(const char *dirpath)
 	}
 
 	/* Close directory */
-	dirclose(dir);
+	closedir(dir);
 
 	return 0;
 }
@@ -935,7 +936,7 @@ title_path titles[64];
 char dirpath[256];
 char filepath[256];
 
-DIR_ITER *dir;
+DIR *dir;struct dirent* dir_dirent;
 
 void *title_tmd;
 int title_tmd_len;
@@ -1004,7 +1005,7 @@ int shared=1;
 	sprintf(dirpath, "%s/title/00010001", &dev_names[is_sd==0][0]);
 
 	/* Open directory */
-	dir = diropen(dirpath);
+	dir = opendir(dirpath);
 	if (!dir)
 		return -3;
 
@@ -1014,7 +1015,7 @@ int shared=1;
 		struct stat filestat;
 
 		/* Read entry */
-		if (dirnext(dir, filename, &filestat))
+		if ((dir_dirent=readdir(dir)) && stat(strcpy(filename,dir_dirent->d_name),&filestat))
 			break;
 
 		/* Non valid entry */
@@ -1076,7 +1077,7 @@ int shared=1;
 	}
 
 /* Close directory */
-	dirclose(dir);
+	closedir(dir);
 
 	// update contents
 
@@ -1628,15 +1629,15 @@ void FAT_Install(int is_sd)
 char dir_path[256];
 
 int one=1;
-DIR_ITER *dir;
+DIR *dir;struct dirent* dir_dirent;
 
 
     // test for device
 	
-	dir = diropen(&dev_names[is_sd==0][0]);
+	dir = opendir(&dev_names[is_sd==0][0]);
 	if (!dir)
 		return;
-	dirclose(dir);
+	closedir(dir);
 
    // to be sure shared folder exist
 	sprintf(dir_path, "%s/shared", &dev_names[is_sd==0][0]);
@@ -1651,7 +1652,7 @@ DIR_ITER *dir;
 
 	
 	/* Open directory */
-	dir = diropen(dir_path);
+	dir = opendir(dir_path);
 	if (!dir)
 		return;
 
@@ -1664,7 +1665,7 @@ DIR_ITER *dir;
 		time_sleep=15*60;
 
 		/* Read entry */
-		if (dirnext(dir, filename, &filestat))
+		if ((dir_dirent=readdir(dir)) && stat(strcpy(filename,dir_dirent->d_name),&filestat))
 			break;
 
 		/* Non valid entry */
@@ -1716,7 +1717,7 @@ DIR_ITER *dir;
 	}
 time_sleep=5*60;
 /* Close directory */
-	dirclose(dir);
+	closedir(dir);
 
 	down_mess="";
 }

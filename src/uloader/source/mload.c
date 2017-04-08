@@ -61,7 +61,6 @@ int n;
 		
 		if(hid>=0)
 			{
-			iosDestroyHeap(hid);
 			hid=-1;
 			}
 		}
@@ -79,7 +78,6 @@ int ret;
 
 	if(hid>=0)
 		{
-		iosDestroyHeap(hid);
 		hid=-1;
 		}
 
@@ -139,7 +137,6 @@ void *buf=NULL;
 
     if(hid>=0)
 		{
-		iosDestroyHeap(hid);
 		hid=-1;
 		}
 
@@ -165,7 +162,6 @@ void *buf=NULL;
 out:
 	if(hid>=0)
 		{
-		iosDestroyHeap(hid);
 		hid=-1;
 		}
 	

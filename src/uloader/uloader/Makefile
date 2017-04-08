@@ -33,7 +33,7 @@ LDFLAGS	=	-g $(MACHDEP) -mrvl -Wl,-Map,$(notdir $@).map -T../../rvl.ld
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	../../lib/libfat.a -lasnd -lmodplay -lscreen -lpng -lwiiuse -lbte  -logc -lm -lz #../../tremor/libtremor.a
+LIBS	:=	../../lib/libfat.a -lasnd -lmodplay -laesnd -lscreen -lpng -lwiiuse -lbte  -logc -lm -lz #../../tremor/libtremor.a
 
 
 #---------------------------------------------------------------------------------

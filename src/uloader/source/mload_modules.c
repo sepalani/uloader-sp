@@ -322,7 +322,6 @@ s32 ret;
 		{
 		if(hid>=0)
 			{
-			iosDestroyHeap(hid);
 			hid=-1;
 			}
 		return -1;
@@ -352,7 +351,6 @@ s32 ret;
 
 	if(hid>=0)
 		{
-		iosDestroyHeap(hid);
 		hid=-1;
 		}
 	
@@ -382,7 +380,6 @@ s32 ret;
 		{
 		if(hid>=0)
 			{
-			iosDestroyHeap(hid);
 			hid=-1;
 			}
 		return -1;
@@ -399,7 +396,6 @@ s32 ret;
 
 	if(hid>=0)
 		{
-		iosDestroyHeap(hid);
 		hid=-1;
 		}
 	

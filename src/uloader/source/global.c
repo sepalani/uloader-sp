@@ -2,6 +2,7 @@
 #include "cheats.h"
 #include "../libfat/source/partition.h"
 #include "fatffs_util.h"
+#include <dirent.h>
 
 extern void* SYS_AllocArena2MemLo(u32 size,u32 align);
 
@@ -421,7 +422,7 @@ u32 usb_clusters=0;
 
 int list_fat(char *device)
 {
-DIR_ITER *fd;
+DIR *fd;struct dirent* fd_dirent;
 
 int n=0;
 int m=0;
@@ -453,7 +454,7 @@ char filename[256];
 	
 	p= malloc(32768);
 
-	fd = diropen(device);
+	fd = opendir(device);
 
 	n=num_fat_games;
 
@@ -463,7 +464,7 @@ char filename[256];
 
 	while(n<256)
 		{
-		if(dirnext(fd, namefile, &filestat)!=0) break; /*dirreset(fd);*/ 
+		if((fd_dirent=readdir(fd))!=NULL && stat(strcpy(namefile,fd_dirent->d_name),&filestat)!=0) break;
 		
 		if(!(filestat.st_mode & S_IFDIR)) 
 			{
@@ -532,14 +533,14 @@ char filename[256];
 
 			}
 		}
-	dirclose(fd);
+	closedir(fd);
 	}
 
 	num_fat_games=n;
 
 	sprintf(nand_path, "%c%c:/nand/title/00010001/", device[0], device[1]);
 	
-	fd = diropen(nand_path);
+	fd = opendir(nand_path);
 
 	if(fd != NULL)
 	{
@@ -547,7 +548,7 @@ char filename[256];
 
 	while(n<256)
 		{
-		if(dirnext(fd, namefile, &filestat)!=0) break; /*dirreset(fd);*/ 
+		if((fd_dirent=readdir(fd))!=NULL && stat(strcpy(namefile,fd_dirent->d_name),&filestat)!=0) break;
 
 		if(first)
 			{
@@ -745,7 +746,7 @@ char filename[256];
 
 			}
 		}
-	dirclose(fd);
+	closedir(fd);
 	}
 
 	free(p);
