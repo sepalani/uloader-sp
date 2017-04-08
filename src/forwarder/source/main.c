@@ -21,12 +21,15 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <gccore.h>
 #include <ogcsys.h>
 #include <fat.h>
 
 #include <sdcard/wiisd_io.h>
+
+extern void __exception_closeall(void);
 
 char param0[256]="sd:/apps/uloader/boot.dol";
 
