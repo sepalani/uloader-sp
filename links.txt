@@ -1,0 +1,15 @@
+
+
+Loadstructor (customs game channels):
+
+    http://clusterrr.com/Loadstructor.html
+
+Yaulct (customs game channels):
+
+   http://gbatemp.net/index.php?showtopic=151410&st=0
+
+NOTES:
+
+Copy the respective modified content from "forwarder_v2"
+
+wiiscrubber_wbfs is modified to work with uLoader CFG saved without delete it

@@ -1,0 +1,302 @@
+uLoader v4.0 - por Hermes (www.elotrolado.net)
+----------------------------------------------------
+
+ATENCION: ejecuta primero cios_installer.dol (3.0 requerido). Ahora puedes seleccionar el IOS usado para instalar
+
+uLoader es un trabajo basado en YAL de Kwiirk y usbloader de Waninkoko que ha tratado de dar soporte a los customs IOS de ambos trabajos (cIOS222 y cIOS249)
+para lanzar backups desde dispositivos de almacenamiento USB y con una interfaz gráfica al estilo de los canales de Wii
+
+************************************************************************************************************************************************************
+
+Caracteristicas:
+---------------
+
+- Soporte para comandos Cover en dip_plugin y ehcmodule. Se suprime el uso del cIOS 249
+
+- Soporte para dispositivos en formato FAT/FAT32 (SD y USB) y DVD Multijuego mediante .ciso (max 8 juegos en DVD UDF)
+  (mira el anexo "sobre la version 4.0.txt" para mas detalle)
+
+- ehcmodule configurable desde el HOME menu "uLoader Hacks"
+
+- Se añade soporte 16:9 y se añade salvapantallas
+
+- Se añade menu alternativo de configuracion, donde podremos seleccionar si BCA se toma de disco, de la base de datos (sd:/bca_database.txt)
+  o en el caso de disco en HDD/pendrive obtener el BCA de la base de datos y programarlo en el offset 0x100 del juego
+
+- Se añade boton (cruceta Abajo) para suprimir la vibracion del mando. 
+  Se añade boton (cruceta Arriba) para seleccionar 4 iconos y 2 tamaños distintos para el puntero.
+
+- Añadido soporte de actualizacion de la aplicacion  desde Internet (Entra Menu HOME)
+
+- Soporte para dispositivos DVD USB: Ello solo puede correr backups de DVD desde .iso (los juegos originales no funcionan debido a que los lectores
+  de DVD no soportan el formato Wii). Recuerda que debes insertar un DVD al empezar el programa para trabajar. Mira "Modo DVD USB" abajo en este leeme.txt
+  para mas detalles
+
+- Soporte añadido para salvar CFG, alternative dol, control parental, configuración de los juegos, etc desde modo DVD.
+
+- Soporte para datos BCA. Puedes añadirlos en la .ISO, offset 0x100 (64 bytes). Si esta area está rellena con ceros it use un BCA por defecto (NSMB compatible).
+  Nueva funcion ioctl 0xda soportada en dip_plugin y añadida nueva opcion para el modo DVD para leer los datos BCA Datas desde el DVD original.
+  Añadido soporte para salvar BCA en una base de datos en sd:/bca_database.txt
+
+- Soporte para cargar juegos en DVD, con DOL alternativo (pulsa '2' sin dispositivo USB o pulsa el icono DVD en la esquina superior-derecha 
+  de la selección de juegos)
+
+- Nuevo dev/mload y modulo EHCI basado en interrupciones. Nuevo cIOS basado en IOS 38 (Yo tengo hecho test leyendo durante mas de 21000 segundos sin errores).
+  Mira  el modo de operación abajo.
+
+- Ahora puedes añadir tu propia musica añadiendo  un fichero .mod en la ruta sd:/apps/uloader/music.mod
+
+- Soporte para modo test: Pulsa el botón RESET nada mas ver la pantalla de presentación para entrar en dicho modo. Pulsa RESET o HOME para salir 
+  y salvar el log interno en la SD (sd:/log_ehc.txt)
+
+- Soporte para SD y USB FAT/FAT32: Ahora puedes usar cheats y carga .dolalternativo desde el dispositivo USB 2.0 (requiere una partición FAT)
+
+- Añadido control Parental. Por defecto la contraseña es 00000 (el ultimo cero es el 'ENTER'. Puedes programar una nueva contraseña como XXXX0).
+  Puedes cambiar la contraseña desde el menu especial, pulsando HOME y salir de la caja que pide contraseña pulsando B.  Desde el menu de control
+  parental se listan los ultimos 8 juegos lanzados con fecha y hora, se habilita la petición de contraseña solo con entrar o se puede cambiar la 
+  contraseña por otra (desde 1.8 la contraseña 00000 deshabilita el control parental)
+
+- Visualiza 15 juegos por pantalla, mostrando un icono que puede ser insertado en el propio disco, utilizando la revisión de wbfs_win.exe 
+  que adjunto (ver mas abajo "Notas sobre wbfs_win").
+
+- Dispone de una pantalla de Juegos Favoritos (hasta 16 juegos). (salva __CFG_ en HDD)
+
+- Permite seleccionar el cIOS a utilizar entre cIOS 222 y CIOS 249.
+
+- Textos en Inglés y Español (autodetecta)
+
+- Soporta Forzado de video, seleccion de idioma y Ocarina (nota: usa "Auto" para cambiar los juegos de PAL a NTSC o NTSC a PAL o usa "Force PAL 60"
+   para cambiar de NTSC a PAL60)
+
+- Soporte de hasta 4 particiones WBFS
+
+- Posibilidad de usar el cIOS alternativo 223 para lanzar juego.
+
+- Posibilidad de añadir/borrar iconos/caratulas desde la SD a los juegos, directamente (el PNG  es añadido al HDD directamente).
+  Ahora puedes descargar caratulas desde Internet o adquirir automaticamente las carátulas desde el directorio actual de la SD
+
+- Ahora puedes cargar juegos como Red Steel u otros usando un .dol alternativo (mira NOTAS DE DOL ALTERNATIVO en este documento)
+
+- Añadido acceso directo para selección de Dol alternativo
+
+- Ahora puedes cargar ehcmodule.elf externamente (mete en sd:/apps/uloader/ehcmodule.elf) para
+  utilizar versiones antiguas del modulo (mira en src/uloader/resources)
+
+- Añadido soporte para renombrar juegos
+
+- Añadido soporte para recordar los trucos seleccionados cuando se usan trucos desde fichero txt
+
+
+************************************************************************************************************************************************************
+
+INICIO USB 2.0
+--------------
+
+Si obtienes algun error espera unos segundo e intenta el metodo de desenchufar/enchufar
+
+Puedes salir del bucle en caso de error pulsando RESET o el boton HOME en el Wiimote
+
+
+************************************************************************************************************************************************************
+
+CONTROLES
+---------
+
+- Manejo con el puntero del Wiimote o con el stick de la guitarra de GH3
+
+- A o Boton Verde: Seleccionar
+
+- B o Boton Rojo: Salir/Descartar
+
+- Boton +/-: Pagina Siguiente/Anterior
+
+- Boton 1 o Boton Amarillo: Ir a la pagina de favoritos/volver a la ultima pagina
+
+- HOME: Menu especial (Añadir juegos, formatear, control parental, salir...)
+
+- HOME (apuntando a juego): Menu especial completo (opciones para PNG, dol altenativo, borrar...) 
+
+- LEFT/RIGHT: Control de volumen del mod (en pantalla de seleccion de juegos)
+
+************************************************************************************************************************************************************
+
+BOTON DE CONFIGURAR
+-------------------
+
+Aqui puedes acceder a la pantalla de seleccion de idioma, video y cIOS del juego
+
+************************************************************************************************************************************************************
+
+ICONOS/CARATULAS
+----------------
+
+Si el juego no tiene icono, por defecto se añade uno. Ver mas abajo "Notas sobre wbfs_win" para saber como añadir un icono a tu gusto.
+
+Las caratulas deben ser <200 KB y de 160x224 pixels
+
+************************************************************************************************************************************************************
+
+Favoritos
+---------
+
+Por defecto no verás la pantalla al arrancar, hasta que no haya sido añadido al menos un juego.
+
+la configuración requiere un fichero especial en el HDD
+
+
+Para hacerlo, pulsa A sobre el icono del juego y accederás a una pantalla que te permitirá añadir/borrar el juego desde favoritos (borrar solo aparece si accedes desde favoritos)
+
+Al añadir irás a al pantalla de favoritos y verás el icono sombreado, pegado al cursor: solo tienes que soltarlo en alguno de los canales para REEMPLAZARLO por el nuevo.
+
+Si lo que quieres es intercambiar canales, manten presionado B y pulsa A y aparecerá el icono sombreado. Sueltalo donde gustes para INTERCAMBIAR.
+
+Solo se pueden mover los iconos de la pantalla de favoritos
+
+Recuerda que puedes volver desde favoritos a la pagina de procedencia, pulsando el boton 1.
+
+************************************************************************************************************************************************************
+
+
+LANZAR JUEGOS
+-------------
+
+La pantalla de lanzar juegos te permite seleccionar el custom IOS a lanzar (si cIOS 222 no está disponible, se bloqueará en cIOS 249), añadir a favoritos y obviamente, cargar el juego sin más dilación
+
+************************************************************************************************************************************************************
+
+OCARINA
+-------
+
+Los codigos de trucos deben estar en la carpeta "codes" de la SD o en USB (FAT) con extension .gct y nombre igual a la ID del juego
+
+Ejemplo:
+
+:/codes/RB4P08.gct -> trucos de Resident Evil 4 Wii
+
+Ahora dispones tambien una forma de personalizar los trucos, incluyendolos en un fichero de extensión .txt
+
+
+Ejemplo:
+
+:/codes/RB4P08.txt -> trucos de Resident Evil 4 Wii
+
+
+Dentro del .txt debe haber:
+
+RB4P08 /-> ID del juego (obligatorio, mismo nombre que el fichero)
+Resident Evil 4 Wii edition /-> Nombre del juego (opcional, linea inmediata a la ID, una sola linea)
+
+In Game /-> Grupo (opcional, separado por una linea y compuesto por una sola linea)
+
+Unlimited Ammo for all guns [Dr.Pepper] /-> Nombre del truco (siempre y evidentemente, una sola linea)
+48000000 8031F44C /-> Codigos del truco
+DE000000 80008180
+12000008 000000FF
+E0000000 80008000
+Ammo infinite for you /-> Comentario (opcional, una sola linea)
+
+Unlimited Pitas/Money [Dr.Pepper] /-> Nombre del segundo truco
+14337D58 000FFFFF /-> codigos del truco
+
+
+
+Nota: el nombre de grupo y el nombre de truco, no deben sobrepasar los 63 caracteres (el nombre del truco tiene un maximo de 39 caracteres)
+
+************************************************************************************************************************************************************
+
+Notas sobre wbfs_win
+--------------------
+
+wbfs_win es una utilidad de linea de comandos que puede ser utilizada desde GUI como WBFS Gui:
+
+http://www.elotrolado.net/hilo_yal-juegos-sin-usbloader-desde-homebrew-channel_1213714
+
+La utilidad tiene algunos cambios que permiten extraer a .ciso por defecto (si lo renombras a .iso funcionará igual en otros GUI que fuerzan el tipo de fichero), con lo cual nos ahorraremos unos GB de disco, subir tanto .iso como .ciso y la posibilidad de añadir un icono a la iso subida.
+
+Tambien se soporta la extracción como iso usando el comando "isoextract" (ver readme_new.txt)
+
+Para añadir un icono basta hacer:
+
+wbfs_win.exe Z png RSPP01 HBC_icono_WiiSports.png
+
+Donde:
+
+ -Z es la letra de la unidad
+ -png es el comando
+ -RSPP01 es la id de wiisports
+ -HBC_icono_WiiSports.png fichero png
+
+El fichero PNG debe medir menos de 200KB. Si mide menos de 100KB mejor, porque eso afectará a la hora de mostrar la pantalla bastante.
+
+Tanto el ancho como el alto es mejor que sean divisibles entre 16 para evitar problemas con las texturas y si no supera 256x192 mejor. Yo recomendaría unas dimensiones de 128x96 como promedio.
+
+Si tienes dudas, pregunta en el foro.
+
+Recuerda que ahora tienes una opción para subir iconos desde la SD en uLoader.
+
+Algunos usuarios de Elotrolado.net han subido algunos iconos en este enlace:
+
+http://www.elotrolado.net/wiki/Iconos_de_juegos_para_uLoader
+
+(salva la pagina por entero para obtener todos los iconos rapidamente)
+
+
+************************************************************************************************************************************************************
+
+
+NOTAS DE DOL ALTERNATIVO
+------------------------
+
+
+NOTA: El viejo metodo para dol alternativo ya no es soportado.
+
+- Pulsa HOME (apuntando a un juego)
+
+- Pulsa PLUS para  cambiar de pagina y entra en "altertanive.dol"
+
+- Si ves la opcion "Delete Alternative .dol" usala para eliminar la carga del dol alternativo
+
+- Pulsa "Buscar .dol" para encontrar dols alternativos
+
+- Selecciona uno (si encuentra alguno, por supuesto)
+
+NOTA: Ello puede listar 5 dols solamente, pero pienso que es suficiente por el momento (normalmente encuentra uno o ninguno). 
+Cuando seleccionas uno, ellos is salvado en el fichero WBFS _CFG_ creado por uLoader. Soporta 1024 juegos
+
+NOTA2: Por supuesto, cuando usas "delete alternative .dol"ello borra la entrada de lista en _CFG_ y no el .dol :P
+
+NOTA3: Puedes borrar los viejos directorios sd:/games o usb:/games
+
+
+Modo Operacional del driver EHCI
+--------------------------------
+
+- Montaje de dispositivo: LED frontal luce y se apaga al finalizar.
+
+- Fallo de montaje/error irrecuperable: LED frontal parpadea con una cadencia lenta
+
+- Desconexion de una unidad montada: LED frontal parpadea 3 veces y se apaga, de forma continua
+
+- Detección de un dispositivo diferente al que hay montado: LED frontal parpadea rápidamente
+
+- Soporte por interrupciones para liberar como USB 1.1 el resto de puertos (recuerda que el puerto 0 es siempre para USB 2.0)
+
+
+Modo DVD USB
+------------
+
+Al inicio:
+
+- Arranca uLoader con un lector DVD conectado al puerto USB e introduce un disco.
+  
+  1- Mientras el disco es montado aparece el siguiente mensaje "ERROR: Can't Mount Device". 
+ 
+  2- Si persiste con el DVD dentro, tal vez el lector no puede montar el disco porque no lo reconoce: cambia el disco o intenta reconectar el lector
+
+  3- Si aparece un error "ERROR: DVD Device Sector Size must be 2048 bytes", significa que el disco no es del tipo apropiado (por ejemplo, CD Audio XD)
+
+En la pantalla de carga de DVD:
+
+- Funciona exactamente igual que con el lector de Wii: puedes expulsar y cambiar de disco, etc desde el nuevo dispositivo
+
+NOTA: en este modo, no se pueden cargar discos desde el lector de Wii, obviamente

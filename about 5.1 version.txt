@@ -1,0 +1,305 @@
+Version 5.1
+------------
+
+- Added dev/mload shadow engine (to avoid PoP device detection)
+
+- Added .wip file support (put it in folder sd:/ codes or usb:/ codes). You can use 3, 4 or 6 chars for the ID (corrected)
+
+- Removed port 1 USB support (because it don´t work)
+
+Version 5.0
+------------
+
+- Improved cheats support allowing files with 4 chars ID for WiiWare and other things
+
+- WDM file support (put it in folder sd:/ codes or usb:/ codes). You can use 3, 4 or 6 chars for the ID
+
+- Added self-selection using 4 chars on the covers id for Wiiware and removed WiiWare title display when adding a PNG file as icon
+
+Version 4.9C
+------------
+
+- Changes in Game Configuration menu
+
+Version 4.9B
+------------
+
+- __CFG_ entry bug in WBFS fixed
+
+- Some problems with unaligned memory/memory allocation fixed in alternative dol function (apparently XD)
+
+- Others minor bugs fixed
+
+Version 4.9A
+------------
+
+- Resolution of the bugs found until now.
+
+- Internet Support for Wiiware's and song download from the Guitar Hero World Tour and Guitar Hero 5 Stores (it does not work with Rock Band 2)
+
+- Added option to detect the Homebrew channel correctly
+
+- New Button "Use Diary" to avoid (or not) the registry of the games in the Wii diary
+
+- POWER button control desactived and derived to the stm/eventhook function to avoid the problem of Wiimote On when you press POWER button
+  (some games don't use stm/eventhook, so remember you to use RESET button or exit to Home Menu to unmount the FAT device and preserve the disc
+  integrity without losing datas)
+
+- Improvements in FAT support, FFS emulator, blah, blah XD ;) 
+
+Version 4.8
+-----------
+
+Thanks to "elpresi" and "kwanbis" to translate the spanish text ;)
+
+What's new:
+
+- Improved savegame and FAT support
+
+- Wiiware/VC games emulation
+
+- Wiiware/VC/DLC content installer (Copy wads to sd:/nand/install or usb:/nand/install)
+
+- Auto-icon function for Wiiware/VC: It uses a series of checks to extract an image from icon.bin and use it as default (It can fail as it
+is a real chaos to find an image there... maybe in the future an image could be selected from banner.bin or icon.bin). This icon can be removed either by adding a PNG image from the usual place or by using the default icon if "Edit CFG#2" -> "Delete Icon" is selected.
+
+- Function to autocomplete/update shared content and option to force update of Wiiware/VC content (the former is done when the game is run; the latter with "Edit CFG #2" -> "Force Content Update")
+
+- FAT unmounting support when exiting to the menu, or when using the Reset or Power buttons (by monitoring /dev/stm/eventhook, /dev/stm(immediate and both buttons interrupt vectors)
+
+- Option to redirect to x:/nand/ when seeking downloadable content (DLC) when saves are emulated in nand2, 3 or 4
+
+- Backup/restore support for the quicksave/snapshot files created by certain Wiiware when exiting to the menu (qsdata.bin or snapshot.bin are restored if lost)
+
+- Support for copying game related DLC to the specified path.
+
+- Classic Controller suport added.
+
+- New uLoader hacks to set cIOS 224 as default cIOS and new "back in black" option to change the background look by having the posibility to add a PNG (640x480 true color) as wallpaper from sd:/background.png, sd:/apps/uloader/background.png or usb:/background.png, usb:/apps/uloader/background.png)
+
+
+NEW OPTIONS IN DETAIL
+
+Wiiware / VC
+--------------------
+
+Every time a wad is installed the newest version of the shared content is used. uLoader has its own installer which doesn't use the system, so it needs to manage the shared content by itself and set it as private. Old content update can be forced with a button, but it is recommended to install first the newest Wiiwares to get from the beginning the newer version of shared content.
+
+*Installation method
+
+Wiiware/VCs are installed in x:/nand. Copy the wads in x:/nand/install (don't copy too many as it takes some time to decrypt and install)
+
+* New option in Edit CFG #1:
+
+"Skiip Boot" -> skips the content flagged as executable and analyzes the title looking for other dol file. It is needed for some games that don't work in other ways.
+
+* New options in Edit CFG #2:
+
+Information about title path is shown (if you need to modify something, it would be x:/nand/title/00010001/xxxxxxxx where x is the information show)
+
+"Del Title" -> this completely deletes the Wiiware (the ususal option in uLoader to delete games is not used because an special method is needed)
+
+"Del Data" -> this just deletes the contents of the "_data" folder (savegames, etc)
+
+"Force Content Update" -> updates content that matches the hash, by scanning all the installed Wiiware. Useful in case of partial installs or game malfunction (for example, Super Mario 64's electronic manual problem in old installations can be fixed in this way)
+
+"Delete icon" -> damages the icon information in Wiiwares so it is not shown nor automatically updated (if you use the normal PNG delete uLoader would reinsert the icon again next time)
+
+
+Savegames / DLC in WBFS/.CISO and DVD
+----------------------------------
+Savegames work the same as in v4.5b, but now there are extra functions for DLC.
+
+"Use DLC form x:/nand" -> forces the load of DLC content (00010005) from x:/nand instead of the selected path for the savegame (for example you can save to x:/annd3 and take the DLC from x:/nand)
+
+"Copy DLC" -> similar to "NAND export save", copies DLC to the path selected for savegames (if you select "USB" and "nand2", DLC would install there).
+
+
+Installation process and working with content
+------------------------------------------------
+
+Wads copied to x:/nand/install are deleted once correctly installed. Two types are supported Wiiware/VC (00010001 titles) and DLC (00010005 titles). The routine is more permissive whith the latter with incomplete wads.
+
+When something is installed the content is checked and the shared content is updated if needed (in x:/nand/shared).
+
+The content update, if needed, is done during game execution (so the first time it will take some time if out-of-date content is found).
+uLoader modifyes title.tmd (it backs it up to #title.tmd) to flag all the content as private to avoid having to emulate the path /shared1 and thus manage to our taste shared content.
+
+It is also at that moment that a new ticket is generated from the actual IOS ticket to skip the ES_Identify(), FAT_Identify() and Set_UID() that otherwise would fail with IOS 37 and 57 (evidently, a false ticket is used to skip this step).
+
+
+RECOMENDATIONS
+--------------------
+
+- Don't install many wads at a time: a long time is required to decrypt and copy each game to the Wii.
+
+- Install new games first so older ones can get advantage of its improvements (anyway, if the game works correctly it doesn't really matter)
+
+- Respect original video mode, if it is not working, try the "skip IOS" option. If it is still not working, try other IOS (some games don't work with 224). Once the game is working, it can be checked if it admits the Auto or "Force PAL 60" modes for NTSC games, for example.
+
+- Be careful when copying DLC, because it will overwrite the old data and you could disable songs in GH, for example (a backup of title.tmd is done). If the game has the 53xxxxxx id, DLC will be at title/00010005/73xxxxxx, or put in another way, add 0x20.
+
+- DLC obtained in other ways, apart from being illegal, could be "trucha" and not work, be invisible to the programs or overlap with other DLCs in memory. The best thing to do is to download the free DLC to the nand without emulation (emulation gives problems with downloads) and then copy it with the "Copy DLC" to be emulated to be able to free the space that DLC took from the nand.
+
+FINAL NOTE: Warning: this is still experimental and there could be bugs that could make you lose all content or corrupt it, so it is adviced to do a backup of everything valuable and not push it. The extension for savegames, DLC and Wiiware is undoubtely a useful tool and it can still be improved. I am not responsible of bad uses or malfunctions and you are warned that you should protect valuable data as much as you can .
+
+
+The New in uLoader 4.5
+-----------------------
+
+Sorry, this a beta preliminary and i am waiting to other person translate it or may be i do it tomorrow! :)
+
+I am very tired today.
+
+But...
+
+- It have a new cIOS Installer supporting the news version of IOS 37, 38, 57 and 60 without merges. It use the same folder format of NUS Downloader
+. Put the ios to install in the "ios" folder: SD:/ios/0000000100000039v5661 (encrypted files, no wads). (new stripios allow it)
+
+NOTE: Old v3-v4 mload can works with the new uLoaded and FFS emulation because old and new IOS 38, uses the same patches.
+
+
+- It have a new FAT / FFS module that emulates the saves of the console (see Configuration -> Edit CFG#2, select a connected device
+and folder (it support "nand", "nand2", "nand3" and "nand4"). You can export from the NAND the saves (if you have) one or launch directly
+and teh game creates one. If the folder countain datas, you can see it in Green and Red without any datas. SD is protect for Game access
+if you are using it (remember you need a SD with 32KB per cluster to work in optimus conditions)
+
+NOTE: You can exit to the system menu without hang. FAT/FFS Module Unmount the FAT devices when one application launch a title and releases all the patches.
+So you must exit to the menu if you want protect your SD/USB datas properly (it flushes the cached datas)
+
+NOTE2: FFS module is based in the reversed code of Spaceman Spiff (thanks)
+
+- Support for the Wii diary (thanks to Mark R. by the code)
+
+- isotociso don't ask "press any key" when you launch it from command line
+
+- wbfs_win now repair bad blocks in WBFS partitions using the "Integrity check function". It test for blocks marked as "Free" when it is 
+used by the Games and test for blocks "in Use", without any use (only when the disc is OK without any previous error)
+
+
+The New in uLoader 4.1
+-----------------------
+
+- Support for devices > 1 Terabyte in uLoader improved   (max 2 TB)
+
+- Fixed a bug that disables the load games from DVD when the FAT partition is mounted from SD and USB is offline.
+
+- improved .ciso import from wbfs_win.exe and fixed a bug for devices > 1Terabyte
+
+- Added a new option to force SetConfiguration in ehcmodule (uLoader Hacks)
+
+- Added a new option for short regresive time counter to launch games from channels (Loadstructor channel). See uLoader Hacks.
+
+- Added the new open source dip_plugin (source code in http://github.com/spacemanspiff/odip-plugin and cios_mload_source_install_3.6.rar file)
+
+The New in uLoader 4.0
+-----------------------
+
+.ciso: Packing format that saves the contents of a .ISO in a similar way that is stored on a WBFS partition.
+
+NOTE:If you are a developer you may be interested on looking the annex addresses to developers.
+
+EHCMODULE.ELF:
+
+- New ehcmodule externaly configurable (port, Reset Bulk, force GetMaxlun and alternative Timeout).
+
+- The readings are limited to 64 KB, that i hope will solve some reported reading problems.
+
+- Added support for .ciso reading from CD/DVD USB (for Multigame DVD or direct use)
+
+- Added 0xcd SWIvector for exporting data and handy functions (Ie :Using the WBFS memory heap for fat-module use)
+
+DIP-PLUGIN:
+
+- New compilation to solve some problems exporting to .bin
+
+- Minor bugfixing
+
+- Added .ciso support form internal DVD drive (for Multigame DVD or direct use)
+
+- Added .ciso supprt for FAT devices(or others) with access to os_seek() function as byte(4GB) or as word(16GB)
+
+LIBFAT:
+
+- Added new library with 4GB access through fseek SEEK_SET ( internally cast s32 to u32 and uses 64 bits check at key points)
+
+- Management changes on cache to alling and try to adjust of a cluster
+
+FAT-MODULE:
+
+ - Same changes that on LIBFAT, adjusting cache with a different strategy for FAT entries and data R/W
+
+ - module compacting supressing unnecesary functions and using the WBFS memory heap for caching importing it from ehcmodule
+
+ - The module works on FAT/FAT32 with sd: and usb: devices
+
+ISOTOCISO:
+  
+  - to export .iso to .ciso or .ciso a .iso. use it first wihtout parameters or as "isotociso game.iso" or "isotociso game.ciso" on a CMD prompt
+
+ WBFS_WIN:
+
+  - new version fixing the progress level
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ ULOADER:
+
+ - New code rearrangement, some bugfixing, ecetera)
+
+ - Added .ciso support for FAT and DVD deices.
+
+     - FAT:  Joint list up to 256 games from SD device (sd:/ciso) and USB device( first fat partition usb:/ciso).
+	    Remember you cannot exceed the 4GB per game limit because of this its only recommended using FAT on small like pendrives and SD cards. NOTE: Its advised to format the device to 32KB per cluster using the command "format unit: /FS:FAT32 /Q /A:32k" and watching the archives fragmentation (remove all the files and add the .ciso files FIRST if necesary).
+
+	    if you not proceed that way the reading will be VERY SLOW
+
+	    You can include covers, have favorites, rename games and also using the Alternative DOL option on FAT
+
+     - DVD: You can burn a .ciso image directly on a DVD (on Nero "All files, burn as "mode 1" "2048 bytes" per sector )
+            
+	    Also you can create a DVD in UDF format from Nero UDF (UDF Only) or using Ultraiso, no directories, no superfluous files with a max of 8 .ciso files as the current UDF support implemented is very limited. It works on a USB DVD and also on the internal DVD drive (if your console supports it, sorry black wii owners).
+
+	    You can use also the alternative dol feature from .ciso. The multigame selection is done using the special button that show on the screen.
+
+ - Added new "uLoader hacks" menu (pressing HOME) to configure the program inner working. Requires the uLoader executable be in the sd:/apps/uloader/boot.elf path because it patches itself. To show up the echmodule.elf config options if you have troubles with your USB device run the app wiht the device unplugged, press '2'when asked, and in the DVD screen press HOME and then select uLoader Hacks to try other configurations)
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+DEVELOPERS SECTION
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+EHCMODULE.ELF:
+
+- At ehc_loop, at line 403, is the "svc 0xcd" function management (fat-module->syscalls.s ->swi_ehcmodule()). The WBFS heap ID can be obtained with the help of this service, it sizes 136KB in whole, that you can use for other purposes.
+
+- On main.c is connected the function who captures the syscall os_message_queue_receive() on dev/di (line 164). The management function is in ehc_loop
+  linea 369.Its used here to redirect ioctl 0x7a and 0x88 modifying the message to call other ioctl that is managed from dip_plugin to workaround the Cover error
+
+FAT-MODULE:
+
+- You must not load this if you are gonna use WBFS from ehcmodule.elf because they share the memory heap and fat-module.elf requires a lot of memory.
+
+- You have at your disposal the "sd:" y "usb:" devices that you must mount using their respective Ioctlv calls ( see load_fat_module() at source->  mload_modules.c)
+
+DIP-PLUGIN:
+
+ - At the uloader sources (source-> loader.c -> load_disc() you can se the different uses of the WDVD_SetUSBMode function.
+
+   - Device mode (FAT): The device mode requires to copy the device path at the reserved zone for this purpose in dip_plugin (see function
+     load_fat_module() in source->  mload_modules.c) who is limited to 256 bytes.
+
+     It can be activated with WDVD_SetUSBMode((u8 *) "_DEV", 0), but you also have WDVD_SetUSBMode((u8 *) "_DEVW", 0) on foresight of a device that exceeds the 4GB limit, working os_seek() on words (file_offset/4).
+
+    - Internal DVD mode: WDVD_SetUSBMode(NULL, lba) -> The LBA corresponds with the sector where starts the .ciso image. If the image is invalid , is treated as a normal DVD.
+
+    - USB DVD mode: WDVD_SetUSBMode((u8 *) "_DVD", lba)-> Unlike the Internal DVD mode , here lba=0 means Normal DVD,  whereas the strart of a .ciso image is specified as lba+1. In plain words, if a .ciso image starts at the 265th sector,  you will have to pass lba=266 to work.
+
+ NOTE: uLoader interprets UDF DVD's in a rudimentary form. Knowing how work these funcions you can create others to support other formats like ISO 9660 i have discarded because Nero doents allow to burn file of more than 2GB. You cand find the CISO / UDF support in uloader.c lines
+ 787 and 811 and as you can see the UDF support is rude but it works :D.
+
+  As a trivia: I have the honour to be the first to play a wii game from a CD-R thanks to the .ciso format and obviously an external optical drive ;)
+
+Regards.
+    
+
+P.S. Sorry for the broken "engrish"    
